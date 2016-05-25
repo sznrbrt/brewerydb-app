@@ -11,7 +11,7 @@ var http = require('http');
 
 var mongoose = require('mongoose');
 
-const MONGOURL = process.env.MONGODB_URI || 'mongodb://localhost/ch-test';
+const MONGOURL = process.env.MONGODB_URI || 'mongodb://localhost/brewerydb';
 
 mongoose.connect(MONGOURL, err => {
   console.log(err || `MongoDB connected to ${MONGOURL}`);

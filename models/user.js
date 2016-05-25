@@ -14,15 +14,21 @@ if(!JWT_SECRET) {
 }
 
 var userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isAdmin: { type: String, default: false }
+  isAdmin: { type: String, default: false },
+  ratings: [{
+    beerId: { type: String },
+    beerName: { type: String },
+    score: { type: Number },
+    comment: { type: String }
+  }]
 });
 
 userSchema.statics.auth = function (role) {
   return (req, res, next) => {
     var token = req.cookies.accessToken;
-    
+
     jwt.verify(token, JWT_SECRET, (err, payload) => {
       if(err) return res.status(401).send({error: 'Auth required.'});
 
@@ -71,7 +77,7 @@ userSchema.statics.register = function(userObj, cb) {
       if(err) return cb(err);
 
       var user = new User({
-        username: userObj.username,
+        email: userObj.email,
         password: hash,
         isAdmin:  userObj.isAdmin
       })
@@ -101,6 +107,42 @@ userSchema.statics.authenticate = function(userObj, cb) {
       cb(null, token);
     })
   });
+};
+
+userSchema.statics.addRating = function(userId, ratingObj, cb) {
+  User.findById(userId, (err, user) => {
+    if(err) cb(err);
+    user.ratings.push(ratingObj)
+    user.save(cb)
+  })
+};
+
+userSchema.statics.editRating = function(userId, ratingId, ratingObj, cb) {
+  User.findById(userId, (err, user) => {
+    if(err) cb(err);
+    var idx = 0;
+    var rating = user.ratings.filter((rating, i) => {
+      if(rating._id.toString() === ratingId.toString()) idx = i;
+      return rating._id.toString() === ratingId.toString();
+    })[0];
+
+    user.ratings[idx].score = ratingObj.score || rating.score;
+    user.ratings[idx].comment = ratingObj.comment || rating.comment;
+
+    user.save((err) => {
+      cb(err);
+    })
+  })
+};
+
+userSchema.statics.deleteRating = function(userId, ratingId, cb) {
+  User.findById(userId, (err, user) => {
+    if(err) cb(err);
+    user.ratings = user.ratings.filter((rating) => {
+      return rating._id.toString() !== ratingId.toString();
+    });
+    user.save(cb);
+  })
 };
 
 userSchema.methods.makeToken = function() {

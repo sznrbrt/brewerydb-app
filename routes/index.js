@@ -11,12 +11,8 @@ router.get('/', (req, res) => {
   res.sendFile(indexPath);
 });
 
-router.get('/secret', User.isLoggedIn, User.auth(), (req, res) => {
+router.get('/secret', User.auth(), (req, res) => {
   res.send('Only users!');
-});
-
-router.get('/adminsecret', User.isLoggedIn, User.auth('admin'), (req, res) => {
-  res.send('Only admins!');
 });
 
 module.exports = router;
