@@ -192,7 +192,7 @@ app.controller('reviewspecificCtrl', function($scope, User, $state, $sessionStor
       score: $scope.rating.score,
       comment: $scope.rating.comment
     }
-    User.addRatingToSpecific(ratingObj)
+    User.addRatingToSpecific(ratingObj.beerId, ratingObj)
       .then((res) => {
         $state.go('allBeers')
       })

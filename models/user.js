@@ -116,8 +116,26 @@ userSchema.statics.authenticate = function(userObj, cb) {
 userSchema.statics.addRating = function(userId, ratingObj, cb) {
   User.findById(userId, (err, user) => {
     if(err) cb(err);
+
     user.ratings.push(ratingObj)
     user.save(cb)
+  })
+};
+
+userSchema.statics.addRatingToSpecific = function(userId, beerId,ratingObj, cb) {
+  User.findById(userId, (err, user) => {
+    if(err) cb(err);
+
+    var idx = 0;
+    var rating = user.ratings.filter((rating, i) => {
+      if(rating.beerId.toString() === beerId.toString()) idx = i;
+      return rating.beerId.toString() === beerId.toString();
+    })[0];
+
+    user.ratings[idx].score = ratingObj.score || rating.score;
+    user.ratings[idx].comment = ratingObj.comment || rating.comment;
+
+    user.save(cb);
   })
 };
 

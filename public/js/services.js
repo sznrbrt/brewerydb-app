@@ -39,6 +39,10 @@ app.service('User', function($http, $sessionStorage) {
     return $http.post('./api/users/addRating/', ratingObj);
   }
 
+  this.addRatingToSpecific = (beerId, obj) => {
+    return $http.post('./api/users/addRatingToSpecific/' + beerId, obj);
+  }
+
   this.getNotSampled = () => {
     return $http.get('./api/users/getNotSampled');
   }

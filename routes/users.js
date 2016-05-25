@@ -72,10 +72,10 @@ router.post('/addRating', User.isLoggedIn, (req, res) => {
   });
 })
 
-router.post('/addRatingToSpecific', User.isLoggedIn, (req, res) => {
-  User.addRating(req.user._id, req.body, (err) => {
+router.post('/addRatingToSpecific/:beerid', User.isLoggedIn, (req, res) => {
+  User.addRatingToSpecific(req.user._id, req.params.beerid, req.body, (err) => {
     if(err) return res.status(400).send(err);
-    return res.send('You have added a new rating!');
+    return res.send('You have updated a rating!');
   });
 })
 
