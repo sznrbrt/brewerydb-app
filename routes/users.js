@@ -21,10 +21,9 @@ router.post('/register', (req, res) => {
 
 //   /api/users/login
 router.post('/login', (req, res) => {
-  User.authenticate(req.body, (err, token) => {
+  User.authenticate(req.body, (err, token, id) => {
     if(err) return res.status(400).send(err);
-
-    res.cookie('accessToken', token).send(token);
+    res.cookie('accessToken', token).send(id);
   });
 });
 
@@ -43,6 +42,7 @@ router.get('/profile', User.isLoggedIn, (req, res) => {
 router.put('/profile', User.isLoggedIn, (req, res) => {
   User.editProfile(req.user._id, req.body, (err, edtUser) => {
     if(err) return res.status(400).send(err);
+    console.log(edtUser);
     res.send(edtUser);
   })
 })
@@ -51,7 +51,6 @@ router.put('/profile', User.isLoggedIn, (req, res) => {
 router.get('/people', User.isLoggedIn, (req, res) => {
   User
     .find({_id: {$ne: req.user._id}}) // excludes the logged in user
-    .select({password: false})
     .exec((err, users) => {
       return err ? res.status(400).send(err) : res.send(users);
     });

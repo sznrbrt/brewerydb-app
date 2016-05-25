@@ -1,15 +1,19 @@
 'use strict';
 
-var app = angular.module('myApp');
+var app = angular.module('beerApp');
 
-app.service('Users', function($http) {
+app.service('User', function($http, $sessionStorage) {
 
   this.signup = (newUserObj) => {
     return $http.post('./api/users/register', newUserObj);
   }
 
   this.login = (loginDetailsObj) => {
-    return $http.post('./api/users/login', loginDetailsObj);
+    return $http.post('./api/users/login', loginDetailsObj)
+                .then((res) => {
+                  console.log(res);
+                  $sessionStorage.currentUser = res.data;
+                });
   }
   this.logout = (loginDetailsObj) => {
     return $http.delete('./api/users/logout', loginDetailsObj);

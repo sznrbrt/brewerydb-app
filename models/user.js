@@ -42,7 +42,7 @@ userSchema.statics.auth = function (role) {
         }
         // normal user
         next();
-      }).select('-password');
+      });
     });
   };
 };
@@ -70,8 +70,8 @@ userSchema.statics.isLoggedIn = function(req, res, next) {
 };
 
 userSchema.statics.register = function(userObj, cb) {
-  User.findOne({username: userObj.username}, (err, dbUser) => {
-    if(err || dbUser) return cb(err || { error: 'Username not available.' })
+  User.findOne({username: userObj.email}, (err, dbUser) => {
+    if(err || dbUser) return cb(err || { error: 'Email not available.' })
 
     bcrypt.hash(userObj.password, 12, (err, hash) => {
       if(err) return cb(err);
@@ -88,7 +88,11 @@ userSchema.statics.register = function(userObj, cb) {
 };
 
 userSchema.statics.editProfile = function(userId, newUser, cb) {
-  User.findByIdAndUpdate(userId, { $set: newUser }, {new: true}, cb);
+  bcrypt.hash(newUser.password, 12, (err, hash) => {
+    if(err) return cb(err);
+    newUser.password = hash;
+    User.findByIdAndUpdate(userId, { $set: newUser }, {new: true}, cb);
+  })
 };
 
 userSchema.statics.authenticate = function(userObj, cb) {
@@ -96,7 +100,7 @@ userSchema.statics.authenticate = function(userObj, cb) {
   // confirm the password
 
   // if user is found, and password is good, create a token
-  this.findOne({username: userObj.username}, (err, dbUser) => {
+  this.findOne({email: userObj.email}, (err, dbUser) => {
     if(err || !dbUser) return cb(err || { error: 'Login failed. Username or password incorrect.' });
 
     bcrypt.compare(userObj.password, dbUser.password, (err, isGood) => {
@@ -104,7 +108,7 @@ userSchema.statics.authenticate = function(userObj, cb) {
 
       var token = dbUser.makeToken();
 
-      cb(null, token);
+      cb(null, token, dbUser._id);
     })
   });
 };
