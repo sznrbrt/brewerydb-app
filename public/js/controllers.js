@@ -127,6 +127,14 @@ app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
           })
       })
   }
+  
+  $scope.sortBy = (order) => {
+    if($scope.sortOrder === order) {
+      $scope.sortOrder = "-" + order;
+    } else {
+      $scope.sortOrder = order;
+    }
+  };
 });
 
 app.controller('allBeersCtrl', function($scope, User, $state, $sessionStorage) {

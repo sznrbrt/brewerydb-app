@@ -7,14 +7,14 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Rating (1 - 10)</th>
+          <th ng-click="sortBy('beerName')"><span style="color:blue">Name  <span style="font-size:70%">Click to sort by</span></span></th>
+          <th ng-click="sortBy('score')"><span style="color:blue">Rating (1 - 10)  <span style="font-size:70%">Click to sort by</span></span></th>
           <th>Description</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="beer in beers">
+        <tr ng-repeat="beer in beers | orderBy:sortOrder track by $index">
           <td>{{ beer.beerName }}</td>
           <td>{{ beer.score }}</td>
           <td>{{ beer.comment }}</td>
