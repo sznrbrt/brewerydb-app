@@ -110,5 +110,18 @@ app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
 
 app.controller('allBeersCtrl', function($scope, User, $state, $sessionStorage) {
   console.log('allBeersCtrl');
+  $scope.startreview = () => {
+    $state.go('review');
+  }
+});
 
+app.controller('reviewCtrl', function($scope, User, $state, $sessionStorage, BeerAPI) {
+  console.log('reviewCtrl');
+  $scope.beer = {};
+
+  BeerAPI.getRandom()
+    .then((res) => {
+      $scope.beer = res.data;
+      console.log(res.data);
+    })
 });

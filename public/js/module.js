@@ -40,6 +40,11 @@ app.config(function($stateProvider, $urlRouterProvider){
       templateUrl: '/html/allBeers.html',
       controller: 'allBeersCtrl'
     })
+    .state('review', {
+      url:'/review',
+      templateUrl: '/html/review.html',
+      controller: 'reviewCtrl'
+    })
 
   $urlRouterProvider.otherwise('/');
 });

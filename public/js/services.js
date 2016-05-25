@@ -37,6 +37,14 @@ app.service('User', function($http, $sessionStorage) {
 
 })
 
+app.service('BeerAPI', function($http) {
+
+  this.getRandom = () => {
+    return $http.get("http://api.brewerydb.com/v2/beer/random?key=fb7c4e5814a97328a6d9f9702e095412&format=json");
+  }
+
+})
+
 app.service('StoreData', function() {
   var storeData = {};
   this.get = () => { return storeData }
