@@ -35,12 +35,24 @@ app.service('User', function($http, $sessionStorage) {
     return $http.get('./api/users/people/' + id);
   }
 
+  this.addRating = (ratingObj) => {
+    return $http.post('./api/users/addRating/', ratingObj);
+  }
+
+  this.getNotSampled = () => {
+    return $http.get('./api/users/getNotSampled');
+  }
+
 })
 
 app.service('BeerAPI', function($http) {
 
   this.getRandom = () => {
-    return $http.get("http://api.brewerydb.com/v2/beer/random?key=fb7c4e5814a97328a6d9f9702e095412&format=json");
+    return $http.get("./api/beers/getRandom");
+  }
+
+  this.getById = (id) => {
+    return $http.get("./api/beers/getById/" + id);
   }
 
 })

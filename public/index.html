@@ -30,7 +30,7 @@
               <a ui-sref="home" class="topBarLogo">BEER LOG</a>
               <a class="topBarLink" ng-if="isLoggedIn" ui-sref="allBeers">All beers</a>
               <a class="topBarLink" ng-if="isLoggedIn" ui-sref="myBeers">My beers</a>
-              <a class="topBarLink" ng-if="isLoggedIn">My Profile</a>
+              <a class="topBarLink" ng-if="isLoggedIn" ui-sref="profile">My Profile</a>
             </div>
             <div class="col-xs-6 text-right">
               <a ng-if="!isLoggedIn" class="topBarButton logIn" ui-sref="login">LOG IN</a>

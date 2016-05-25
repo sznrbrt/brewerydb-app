@@ -72,6 +72,13 @@ router.post('/addRating', User.isLoggedIn, (req, res) => {
   });
 })
 
+router.post('/addRatingToSpecific', User.isLoggedIn, (req, res) => {
+  User.addRating(req.user._id, req.body, (err) => {
+    if(err) return res.status(400).send(err);
+    return res.send('You have added a new rating!');
+  });
+})
+
 // userId, ratingId, ratingObj
 router.put('/editRating/:id', User.isLoggedIn, (req, res) => {
   User.editRating(req.user._id, req.params.id, req.body, (err) => {
@@ -85,6 +92,16 @@ router.delete('/deleteRating/:id', User.isLoggedIn, (req, res) => {
     if(err) return res.status(400).send(err);
     return res.send('You have deleted the rating!');
   });
+})
+
+router.get('/getNotSampled', User.isLoggedIn, (req, res) => {
+  User.findById(req.user._id, (err, user) => {
+    if(err) return res.status(400).send(err);
+    user.ratings = user.ratings.filter((rating) => {
+      return rating.score === undefined;
+    });
+    return err ? res.status(400).send(err) : res.send(user.ratings);
+  })
 })
 
 module.exports = router;

@@ -7,4 +7,9 @@
       Not sampled yet:
     </h4>
   </div>
+  <div class="row">
+    <div class="list-group">
+      <a class="list-group-item" ng-repeat="beer in notSampled" ng-click="reviewThis(beer.beerId)">{{ beer.beerName }}<span class="badge">I want to review this</span></a>
+    </div>
+  </div>
 </div>

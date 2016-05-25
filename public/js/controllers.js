@@ -105,23 +105,101 @@ app.controller('editProfileCtrl', function($scope, User, $state, $sessionStorage
 
 app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
   console.log('myBeersCtrl');
-
 });
 
 app.controller('allBeersCtrl', function($scope, User, $state, $sessionStorage) {
   console.log('allBeersCtrl');
+  $scope.notSampled = [];
+
   $scope.startreview = () => {
     $state.go('review');
   }
+
+  $scope.reviewThis = (id) => {
+    $state.go('reviewspecific', { "id": id });
+  }
+
+  User.getNotSampled()
+    .then((res) => {
+      $scope.notSampled = res.data;
+    })
 });
 
 app.controller('reviewCtrl', function($scope, User, $state, $sessionStorage, BeerAPI) {
   console.log('reviewCtrl');
   $scope.beer = {};
-
+  $scope.loading = true;
+  $scope.rating = {};
   BeerAPI.getRandom()
     .then((res) => {
       $scope.beer = res.data;
-      console.log(res.data);
+      $scope.loading = false;
     })
+  $scope.rate = () => {
+    var ratingObj = {
+      beerId: $scope.beer.id,
+      beerName: $scope.beer.name,
+      score: $scope.rating.score,
+      comment: $scope.rating.comment
+    }
+    User.addRating(ratingObj)
+      .then((res) => {
+        $scope.loading = true;
+        BeerAPI.getRandom()
+          .then((res) => {
+            $scope.beer = res.data;
+            $scope.loading = false;
+          })
+      })
+  }
+
+  $scope.notsampled = () => {
+    console.log('whhaaat');
+    var ratingObj = {
+      beerId: $scope.beer.id,
+      beerName: $scope.beer.name,
+      score: undefined,
+      comment: undefined
+    }
+    User.addRating(ratingObj)
+      .then((res) => {
+        $scope.loading = true;
+        BeerAPI.getRandom()
+          .then((res) => {
+            $scope.beer = res.data;
+            $scope.loading = false;
+          })
+      })
+  }
+
+});
+app.controller('reviewspecificCtrl', function($scope, User, $state, $sessionStorage, BeerAPI, $stateParams) {
+  console.log('reviewspecificCtrl');
+  $scope.beer = {};
+  $scope.loading = true;
+  $scope.rating = {};
+
+  BeerAPI.getById($stateParams.id)
+    .then((res) => {
+      $scope.beer = res.data;
+      $scope.loading = false;
+    })
+
+  $scope.rate = () => {
+    var ratingObj = {
+      beerId: $scope.beer.id,
+      beerName: $scope.beer.name,
+      score: $scope.rating.score,
+      comment: $scope.rating.comment
+    }
+    User.addRatingToSpecific(ratingObj)
+      .then((res) => {
+        $state.go('allBeers')
+      })
+  }
+
+  $scope.notsampled = () => {
+    $state.go('allBeers')
+  }
+
 });

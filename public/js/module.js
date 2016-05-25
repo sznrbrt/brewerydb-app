@@ -45,6 +45,11 @@ app.config(function($stateProvider, $urlRouterProvider){
       templateUrl: '/html/review.html',
       controller: 'reviewCtrl'
     })
+    .state('reviewspecific', {
+      url:'/reviewspecific/:id',
+      templateUrl: '/html/reviewspecific.html',
+      controller: 'reviewspecificCtrl'
+    })
 
   $urlRouterProvider.otherwise('/');
 });
