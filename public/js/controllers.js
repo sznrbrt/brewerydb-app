@@ -105,6 +105,15 @@ app.controller('editProfileCtrl', function($scope, User, $state, $sessionStorage
 
 app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
   console.log('myBeersCtrl');
+  $scope.beers = {};
+  User.getPerson($sessionStorage.currentUser)
+    .then((res) => {
+      $scope.beers = res.data.ratings;
+      $scope.beers = $scope.beers.filter((beer) => {
+        return beer.score !== undefined;
+      })
+    })
+
 });
 
 app.controller('allBeersCtrl', function($scope, User, $state, $sessionStorage) {

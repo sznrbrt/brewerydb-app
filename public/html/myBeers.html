@@ -1,1 +1,25 @@
-<h1>My Beers</h1>
+<div class="container-fluid">
+  <div class="row" style="margin-left:10px">
+    <h3>My Beers:</h3>
+  </div>
+  <div class="row" style="margin-left:10px; margin-right:10px;">
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Rating (1 - 10)</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="beer in beers">
+          <td>{{ beer.beerName }}</td>
+          <td>{{ beer.score }}</td>
+          <td>{{ beer.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
