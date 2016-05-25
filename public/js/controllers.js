@@ -114,7 +114,19 @@ app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
         return beer.score !== undefined;
       })
     })
-
+  $scope.deleteRating = (id) => {
+    User.deleteRating(id)
+      .then((res) => {
+        User.getPerson($sessionStorage.currentUser)
+          .then((res) => {
+            $scope.beers = res.data.ratings;
+            console.log($scope.beers);
+            $scope.beers = $scope.beers.filter((beer) => {
+              return beer.score !== undefined;
+            })
+          })
+      })
+  }
 });
 
 app.controller('allBeersCtrl', function($scope, User, $state, $sessionStorage) {

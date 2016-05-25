@@ -39,6 +39,10 @@ app.service('User', function($http, $sessionStorage) {
     return $http.post('./api/users/addRating/', ratingObj);
   }
 
+  this.deleteRating = (id) => {
+    return $http.delete('./api/users/deleteRating/' + id);
+  }
+
   this.addRatingToSpecific = (beerId, obj) => {
     return $http.post('./api/users/addRatingToSpecific/' + beerId, obj);
   }
