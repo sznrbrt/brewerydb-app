@@ -103,7 +103,7 @@ app.controller('editProfileCtrl', function($scope, User, $state, $sessionStorage
   }
 });
 
-app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
+app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage, StoreData) {
   console.log('myBeersCtrl');
   $scope.beers = {};
   User.getPerson($sessionStorage.currentUser)
@@ -127,7 +127,7 @@ app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
           })
       })
   }
-  
+
   $scope.sortBy = (order) => {
     if($scope.sortOrder === order) {
       $scope.sortOrder = "-" + order;
@@ -135,6 +135,11 @@ app.controller('myBeersCtrl', function($scope, User, $state, $sessionStorage) {
       $scope.sortOrder = order;
     }
   };
+
+  $scope.editRating = (id, score, comment) => {
+    StoreData.set({'edited': true, "load": { "score": score, "comment": comment }});
+    $state.go('reviewspecific', { "id": id });
+  }
 });
 
 app.controller('allBeersCtrl', function($scope, User, $state, $sessionStorage) {
@@ -203,7 +208,7 @@ app.controller('reviewCtrl', function($scope, User, $state, $sessionStorage, Bee
   }
 
 });
-app.controller('reviewspecificCtrl', function($scope, User, $state, $sessionStorage, BeerAPI, $stateParams) {
+app.controller('reviewspecificCtrl', function($scope, User, $state, $sessionStorage, BeerAPI, $stateParams, StoreData) {
   console.log('reviewspecificCtrl');
   $scope.beer = {};
   $scope.loading = true;
@@ -213,7 +218,14 @@ app.controller('reviewspecificCtrl', function($scope, User, $state, $sessionStor
     .then((res) => {
       $scope.beer = res.data;
       $scope.loading = false;
+      var info = StoreData.get();
+      if(info.edited) {
+        console.log(info.load.score);
+        $scope.rating.score = info.load.score;
+        $scope.rating.comment = info.load.comment;
+      }
     })
+
 
   $scope.rate = () => {
     var ratingObj = {
@@ -224,6 +236,9 @@ app.controller('reviewspecificCtrl', function($scope, User, $state, $sessionStor
     }
     User.addRatingToSpecific(ratingObj.beerId, ratingObj)
       .then((res) => {
+        var info = StoreData.get();
+
+        if(info.edited) return $state.go('myBeers');
         $state.go('allBeers')
       })
   }

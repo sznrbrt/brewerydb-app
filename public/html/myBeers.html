@@ -11,6 +11,7 @@
           <th ng-click="sortBy('score')"><span style="color:blue">Rating (1 - 10)  <span style="font-size:70%">Click to sort by</span></span></th>
           <th>Description</th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +20,7 @@
           <td>{{ beer.score }}</td>
           <td>{{ beer.comment }}</td>
           <td><button class="btn btn-sm btn-danger" ng-click="deleteRating(beer._id)">Delete</button></td>
+          <td><button class="btn btn-sm btn-primary" ng-click="editRating(beer.beerId, beer.score, beer.comment)">Edit</button></td>
         </tr>
       </tbody>
     </table>
